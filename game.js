@@ -1,5 +1,7 @@
 const question = document.getElementById("question");
 const choices = Array.from(document.getElementsByClassName("choice-text"));
+const questionCounterText = document.getElementById('questionCounter');
+const scoreText = document.getElementById('score');
 
 let currentQuestion = {};
 let acceptingAnswers = true;
@@ -17,7 +19,7 @@ let questions = [
         answer: 1
     },
     {
-        question: "What is thecorrect syntax for referrng to an external script called 'xxx.js'?",
+        question: "What is the correct syntax for referrng to an external script called 'xxx.js'?",
         choice1: "<script href='xxx.js'>",
         choice2: "<script name='xxx.js'>",
         choice3: "<script src='xxx.js'>",
@@ -52,6 +54,9 @@ getNewQuestion = () => {
         return window.location.assign("/end.html");
     }
     questionCounter++;
+    questionCounterText.innerText = `${questionCounter}/${MAX_QUESTIONS}`;
+
+
     const questionIndex = Math.floor(Math.random() * availableQuestions.length);
     currentQuestion = availableQuestions[questionIndex];
     question.innerText = currentQuestion.question;
@@ -75,9 +80,13 @@ choices.forEach(choice => {
 
 
         const classToApply = selectedAnswer == currentQuestion.answer ? 'correct' : 'incorrect';
+
+        if(classToApply === 'correct'){
+            incrementScore(CORRECT_BONUS);
+        }
         
         selectedChoice.parentElement.classList.add(classToApply);
-        
+
         setTimeout( () => {
             selectedChoice.parentElement.classList.remove(classToApply);
             getNewQuestion();
@@ -85,5 +94,10 @@ choices.forEach(choice => {
     
     });
 });
+
+incrementScore = num => {
+    score += num;
+    scoreText.innerText = score;
+};
 
 startGame();
